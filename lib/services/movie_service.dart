@@ -12,4 +12,12 @@ class MovieService {
     final json = jsonDecode(response.body);
     return MovieData.fromJson(json).movies;
   }
+
+  Future<MovieDetails> getMovie(int id) async {
+    Map<String, dynamic> parameter = {"api_key": KEY};
+    final url = Uri.https("api.themoviedb.org", "/3/movie/$id", parameter);
+    final response = await http.get(url);
+    final json = jsonDecode(response.body);
+    return MovieDetails.fromJson(json);
+  }
 }

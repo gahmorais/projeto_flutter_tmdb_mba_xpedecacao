@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_list/domain/models/Movie.dart';
+import 'package:movie_list/screens/movie_details_page.dart';
 import 'package:movie_list/view_models/home_viewmodel.dart';
 
 class HomePage extends StatefulWidget {
@@ -33,21 +34,30 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, position) {
                     if (position < snapshot.data!.length) {
                       final movie = snapshot.data![position];
-                      return ListTile(
-                        title: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(
-                            movie.title,
-                            style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => MovieDetailsPage(
+                                    id: movie.id,
+                                  )));
+                        },
+                        child: ListTile(
+                          title: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(
+                              movie.title,
+                              style: const TextStyle(
+                                  fontSize: 18.0, fontWeight: FontWeight.w600),
+                            ),
                           ),
+                          subtitle: Text(
+                            movie.overview,
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          leading: Image.network(
+                              "https://image.tmdb.org/t/p/w500/${movie.backdropPath}"),
                         ),
-                        subtitle: Text(
-                          movie.overview,
-                          maxLines: 4,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        leading:
-                            Image.network("https://image.tmdb.org/t/p/w500/${movie.backdropPath}"),
                       );
                     } else {
                       viewModel.getMovies();

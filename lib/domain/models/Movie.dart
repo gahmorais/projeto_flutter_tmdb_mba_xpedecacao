@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:movie_list/domain/models/genres.dart';
+
 class Movie {
   String title;
   String overview;
@@ -22,14 +26,23 @@ class MovieDetails {
   String overview;
   double popularity;
   String releaseDate;
+  String posterPath;
+  List<Genre> genres;
+  MovieDetails(this.title, this.budget, this.backgropPath, this.overview, this.popularity,
+      this.posterPath, this.genres, this.releaseDate);
+  factory MovieDetails.fromJson(Map json) {
+    final title = json["original_title"] as String;
+    final budget = json["budget"] as int;
+    final backgropPath = json["backdrop_path"] as String;
+    final overview = json["overview"] as String;
+    final popularity = json["popularity"] as double;
+    final posterPath = json["poster_path"] as String;
+    final genres = json["genres"] as List<dynamic>;
+    final releaseDate = json["release_date"] as String;
 
-  MovieDetails.fromJson(Map json)
-      : title = json["original_title"],
-        budget = json["budget"],
-        backgropPath = json["backdrop_path"],
-        overview = json["overview"],
-        popularity = json["popularity"],
-        releaseDate = json["release_date"];
+    return MovieDetails(title, budget, backgropPath, overview, popularity, posterPath,
+        genres.map((e) => Genre.fromJson(e)).toList(), releaseDate);
+  }
 }
 
 class MovieData {
@@ -41,8 +54,7 @@ class MovieData {
     final page = json['page'] as int;
     final results = json['results'] as List<dynamic>;
 
-    final movies =
-        results.map((jsonMovie) => Movie.fromJson(jsonMovie)).toList();
+    final movies = results.map((jsonMovie) => Movie.fromJson(jsonMovie)).toList();
 
     return MovieData(page, movies);
   }
